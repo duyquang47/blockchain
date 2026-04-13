@@ -7,25 +7,22 @@ from lib.config import (my_private_key, my_public_key, my_address,
 
 
 def P2PKH_scriptPubKey(address):
-    ######################################################################
-    # TODO: Complete the standard scriptPubKey implementation for a
-    # PayToPublicKeyHash transaction
     return [
-        # fill this in!
+        OP_DUP,
+        OP_HASH160,
+        address,
+        OP_EQUALVERIFY,
+        OP_CHECKSIG,
     ]
-    ######################################################################
 
 
 def P2PKH_scriptSig(txin, txout, txin_scriptPubKey, private_key, public_key):
     signature = create_OP_CHECKSIG_signature(txin, txout, txin_scriptPubKey,
                                              private_key)
-    ######################################################################
-    # TODO: Complete this script to unlock the BTC that was sent to you
-    # in the PayToPublicKeyHash transaction.
     return [
-        # fill this in!
+        signature,
+        public_key,
     ]
-    ######################################################################
 
 def send_from_P2PKH_transaction(amount_to_send,
                                 txid_to_spend,
@@ -51,13 +48,11 @@ def send_from_P2PKH_transaction(amount_to_send,
 
 
 if __name__ == '__main__':
-    ######################################################################
-    # TODO: set these parameters correctly
-    amount_to_send = None # amount of BTC in the output you're sending minus fee
+
+    amount_to_send = 0.00022
     txid_to_spend = (
-        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-    utxo_index = None # index of the output you are spending, indices start at 0
-    ######################################################################
+        'ef207aab647564befec4ba738d75433ed8be29d8b59dc40201141fed24d1e283')
+    utxo_index = 1 # index of the output you are spending, indices start at 0
 
     txout_scriptPubKey = P2PKH_scriptPubKey(faucet_address)
     response = send_from_P2PKH_transaction(

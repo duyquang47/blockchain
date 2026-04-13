@@ -36,13 +36,19 @@ def create_signed_transaction(txin, txout, txin_scriptPubKey,
 
 def broadcast_transaction(tx, network):
     if network == 'btc-test3':
-        url = 'https://api.blockcypher.com/v1/btc/test3/txs/push'
+        # BlockCypher btc/test3 may not track the same active testnet chain.
+        # Use mempool's testnet endpoint to broadcast raw tx hex directly.
+        url = 'https://mempool.space/testnet/api/tx'
     elif network == 'bcy-test':
         url = 'https://api.blockcypher.com/v1/bcy/test/txs/push'
     else:
       raise InvalidArgumentException("Network must be one of either 'btc-test3', 'bcy-test'")
 
     raw_transaction = b2x(tx.serialize())
+    if network == 'btc-test3':
+        headers = {'content-type': 'text/plain'}
+        return requests.post(url, headers=headers, data=raw_transaction)
+
     headers = {'content-type': 'application/x-www-form-urlencoded'}
     return requests.post(
         url,
